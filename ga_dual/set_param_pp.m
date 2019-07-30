@@ -1,0 +1,14 @@
+param.Population = 100;
+param.Generations = 45;
+param.dt = 0.005;
+param.T = 2;
+param.show = 1;
+param.x0 = [0;0];
+param.ref_signal = [10;0];
+param.u_max = 100;
+param.A = [0 1; 3, 5];
+param.B = [0; 1];
+param.state_cost = diag([1, 0.01]);
+param.input_cost = 0;
+param.K_fast_Q = diag([1, 0.1]);
+param.K_slow_Q = diag([0.1, 1]);
