@@ -13,7 +13,7 @@ K_high(2) = 15;
 latex(sym(round(K_high)))
 
 % Low controller controller design
-K_low = lqr(A, B,  diag([10, 10 0 0]), 1)
+K_low = lqr(A, B,  diag([10, 1 0 0]), 1)
 latex(sym(round(K_low)))
 
 %% Response
