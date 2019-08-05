@@ -16,7 +16,7 @@ end
 sim_func = @(K)(control_response(sys, K));
 sig_x = param.state_cost;
 sig_u = param.input_cost;
-fitness_func = @(x, u, r)(calculate_cost(x, u, r, sig_x, sig_u));
+fitness_func = @(x, u, r)(calculate_cost_response(x, u, r, param));
 
 % Run GA
 for gen=1:Generations

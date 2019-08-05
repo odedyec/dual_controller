@@ -13,8 +13,8 @@ classdef Agent
         function obj = Agent(inp_size, out_size)
             %AGENT Construct an instance of this class
             %   Detailed explanation goes here
-            obj.low = -100;
-            obj.high = 100;
+            obj.low = -10;
+            obj.high = 10;
             obj.K = randn(inp_size, out_size) * obj.high;
             obj.fitness = inf;
         end

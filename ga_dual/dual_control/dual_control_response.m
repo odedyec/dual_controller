@@ -1,6 +1,6 @@
 function [y_dual, u_dual, R] = dual_control_response(sys, K_high, K_low, switch_time)
-n1 = floor((sys.Tfinal - switch_time)/sys.dt);
-n2 = sys.n - n1;
+n2 = floor((sys.Tfinal - switch_time)/sys.dt);
+n1 = sys.n - n2;
 sys.n = n1;
 R = sys.ref_signal;
 [y_high_sw, u_high_sw] = control_response(sys, K_high); % start with high controller
