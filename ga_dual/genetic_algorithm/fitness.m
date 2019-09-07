@@ -1,8 +1,7 @@
-function agents = fitness(agents,sim_func, fitness_func)
+function agents = fitness(agents, param)
 %FITNESS Summary of this function goes here
 %   Detailed explanation goes here
 for i=1:length(agents)
-    [output, input, ref] = sim_func(agents{i}.K);
-    agents{i}.fitness = fitness_func(output, input, ref);
+    agents{i} = agents{i}.calc_fitness(param);
 end
 
