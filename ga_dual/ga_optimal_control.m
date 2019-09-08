@@ -3,7 +3,7 @@ clear all
 clc;
 %% GA param
 param.Population = 500;
-param.Generations = 50;
+param.Generations = 30;
 param.Selection = 0.2;
 param.mutate_probability = 0.3;
 %% System params
@@ -19,7 +19,7 @@ param.B = [0;  0; 83.4659; 80.3162];
 %% GA generate controllers
 % Gen fast controller
 param.Q = diag([10, 10 0 0]);
-param.R = 1;
+param.R = 0.001;
 
 %% LQR response
 K_lqr = lqr(param.A, param.B, param.Q, param.R);
@@ -30,6 +30,7 @@ for i=1:length(u)
     J = e' * param.Q * e + u(:, i)' * param.R * u(:, i) + J;
 end 
 disp(['Lqr cost is ', num2str(J)])
+figure(1)
 t = param.dt:param.dt:param.T;
 subplot(2, 1, 1)
 plot(t, X(1, :) * 180 / pi, t, ref(1, :) * 180 / pi, 'r-')
@@ -49,8 +50,16 @@ for i=1:param.Population
     agents{i}=DualControlAgent(size(sys.B, 2), size(sys.B, 1), param.T);
 end
 %%
-agents = ga_optimize(agents, param);
-[X, u, ref] = dual_control_response(get_sys(param), agents{1}.K_fast, agents{1}.K_slow, agents{1}.t_switch);
+% agents = ga_optimize(agents, param);
+[X, u, ref] = dual_control_response(get_sys(param), ...
+    agents{1}.K_fast, agents{1}.K_slow, agents{1}.t_switch);
+J = 0;
+for i=1:length(u)
+    e = ref(:, i) - X(:, i);
+    J = e' * param.Q * e + u(:, i)' * param.R * u(:, i) + J;
+end 
+disp(['K_dual cost is ', num2str(J)])
+figure(1)
 subplot(2, 1, 1)
 hold on;
 plot(t, X(1, :) * 180 / pi, 'g')
@@ -60,3 +69,5 @@ hold on;
 plot(t, X(2, :) * 180 / pi, 'g')
 legend('lqr controller', 'reference', 'GA controller')
 hold off;
+figure(2)
+plot(t, u, 'g')

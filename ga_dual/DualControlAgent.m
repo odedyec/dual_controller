@@ -18,8 +18,8 @@ classdef DualControlAgent
         function agent = DualControlAgent(inp_size, out_size, T)
             %AGENT Construct an instance of this class
             %   Detailed explanation goes here
-            agent.low = -3;
-            agent.high = 30;
+            agent.low = -10;
+            agent.high = 60;
             agent.out_size = out_size;
             agent.inp_size = inp_size;
             agent.K_fast = randn(agent.inp_size, agent.out_size) * agent.high;
@@ -47,6 +47,9 @@ classdef DualControlAgent
         
         
         function agent = mutate_switch(agent, param)
+            if param.current_agent < 4
+                return
+            end
             mutate_probability = param.mutate_probability;
             if rand > 1 - mutate_probability
                 agent.t_switch = agent.t_switch * (0.5 + rand * 0.5);
@@ -56,18 +59,14 @@ classdef DualControlAgent
         function agent = mutate_fast(agent, param)
             mutate_probability = param.mutate_probability;
             if rand > 1 - mutate_probability
-                mutation_change = 0.2; % Up to 20% change
-                mutation = mutation_change * rand(size(agent.K_fast)) + (1-mutation_change);
-                agent.K_fast = agent.K_fast .* mutation;
+                agent.K_fast = randn(agent.inp_size, agent.out_size) * agent.high;
             end
         end
         
         function agent = mutate_slow(agent, param)
             mutate_probability = param.mutate_probability;
             if rand > 1 - mutate_probability
-                mutation_change = 0.2; % Up to 20% change
-                mutation = mutation_change * rand(size(agent.K_slow)) + (1-mutation_change);
-                agent.K_slow = agent.K_slow .* mutation;
+                agent.K_slow = randn(agent.inp_size, agent.out_size) * agent.high;
             end
         end
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -81,7 +80,9 @@ classdef DualControlAgent
             new_agent = DualControlAgent(agent.inp_size, agent.out_size, agent.T);
             crossover_amount = rand;
             new_agent.K_fast = agent.K_fast * crossover_amount + other.K_fast * (1-crossover_amount);
+            crossover_amount = rand;
             new_agent.K_slow = agent.K_slow * crossover_amount + other.K_slow * (1-crossover_amount);
+            crossover_amount = rand;
             new_agent.t_switch = agent.t_switch * crossover_amount + other.t_switch * (1-crossover_amount);
         end
         

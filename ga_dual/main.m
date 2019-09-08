@@ -5,3 +5,4 @@ close all;
 clear all
 clc;
 %% GA optimal control
+ga_optimal_control
